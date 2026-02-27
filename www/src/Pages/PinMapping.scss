@@ -11,3 +11,175 @@
 		flex-direction: column;
 	}
 }
+
+// Visual Pin Layout
+.visual-pin-layout {
+	&__container {
+		position: relative;
+		width: 100%;
+		max-width: 700px;
+		margin: 0 auto;
+		border: 1px solid var(--bs-border-color, #dee2e6);
+		border-radius: 8px;
+		background: var(--bs-body-bg, #fff);
+		overflow: visible;
+		container-type: inline-size;
+	}
+}
+
+.button-spot {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	border: 2px solid #6c757d;
+	background: #f8f9fa;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	user-select: none;
+	text-align: center;
+	line-height: 1.1;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+	aspect-ratio: 1;
+
+	// Sizes scale with container width (matched to OLED radii: sm=3, md=6, lg=7)
+	width: 9.4cqi;
+	font-size: 2cqi;
+
+	&--sm {
+		width: 4.7cqi;
+		font-size: 1.1cqi;
+	}
+
+	&--lg {
+		width: 10.9cqi;
+		font-size: 2.3cqi;
+	}
+
+	&:hover:not(.button-spot--disabled) {
+		transform: scale(1.1);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+		z-index: 2;
+	}
+
+	&__label {
+		font-weight: 600;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 90%;
+	}
+
+	&__pin {
+		font-size: 1cqi;
+		opacity: 0.5;
+		line-height: 1;
+	}
+
+	// Group colors
+	&--dpad {
+		border-color: #0d6efd;
+		background: #cfe2ff;
+		color: #052c65;
+	}
+
+	&--main {
+		border-color: #198754;
+		background: #d1e7dd;
+		color: #0a3622;
+	}
+
+	&--aux {
+		border-color: #fd7e14;
+		background: #ffe5d0;
+		color: #653208;
+	}
+
+	&--trigger {
+		border-color: #6f42c1;
+		background: #e2d9f3;
+		color: #2a1652;
+	}
+
+	&--addon {
+		border-color: #adb5bd;
+		background: #e9ecef;
+		color: #495057;
+	}
+
+	// States
+	&--selected {
+		border-width: 3px;
+		box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.4);
+		z-index: 3;
+	}
+
+	&--disabled {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+
+	&--none {
+		border-style: dashed;
+		opacity: 0.6;
+	}
+
+	// Hide GP pin label on small buttons
+	&--sm {
+		.button-spot__pin {
+			display: none;
+		}
+	}
+}
+
+// Popover styling
+.pin-popover {
+	min-width: 280px;
+	z-index: 1060;
+
+	.popover-body {
+		padding: 0.5rem;
+	}
+}
+
+// Dark mode support
+[data-bs-theme="dark"] {
+	.visual-pin-layout__container {
+		background: var(--bs-body-bg, #212529);
+	}
+
+	.button-spot {
+		background: #343a40;
+
+		&--dpad {
+			background: #1a3a5c;
+			border-color: #3d8bfd;
+			color: #9ec5fe;
+		}
+
+		&--main {
+			background: #1a3a2a;
+			border-color: #3dd68c;
+			color: #a3cfbb;
+		}
+
+		&--aux {
+			background: #3d2a14;
+			border-color: #fd9843;
+			color: #feb272;
+		}
+
+		&--trigger {
+			background: #2a1a4e;
+			border-color: #9461d9;
+			color: #c29fec;
+		}
+
+		&--addon {
+			background: #2c3034;
+			border-color: #6c757d;
+			color: #adb5bd;
+		}
+	}
+}

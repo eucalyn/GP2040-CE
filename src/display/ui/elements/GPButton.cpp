@@ -32,6 +32,7 @@ void GPButton::draw() {
     bool pinState = false;
     bool buttonState = false;
     bool turboState = false;
+    bool pinAssigned = true;
     uint16_t state = 0;
     int16_t setPin = -1;
     int32_t maskedPins = 0;
@@ -90,7 +91,12 @@ void GPButton::draw() {
         }
     } else if (_inputType == GP_ELEMENT_PIN_BUTTON) {
         // physical pin
-        pinState = ((pinValues >> this->_inputMask) & 0x01);
+        pinAssigned = (pinMappings[this->_inputMask].action != GpioAction::NONE);
+        if (pinAssigned) {
+            pinState = ((pinValues >> this->_inputMask) & 0x01);
+        } else {
+            pinState = false;
+        }
         buttonState = true;
 
         switch (pinMappings[this->_inputMask].action) {
@@ -135,6 +141,13 @@ void GPButton::draw() {
         uint16_t turboRadius = (uint16_t)scaledSize * GP_BUTTON_TURBO_SCALE;
 
         getRenderer()->drawEllipse(baseX, baseY, baseRadius, baseRadius, this->strokeColor, state);
+        if (!pinAssigned && _inputType == GP_ELEMENT_PIN_BUTTON) {
+            // Draw small X mark inside for unassigned pins
+            uint16_t xSize = baseRadius / 2;
+            if (xSize < 1) xSize = 1;
+            getRenderer()->drawLine(baseX - xSize, baseY - xSize, baseX + xSize, baseY + xSize, this->strokeColor, 0);
+            getRenderer()->drawLine(baseX - xSize, baseY + xSize, baseX + xSize, baseY - xSize, this->strokeColor, 0);
+        }
         if (turboState) getRenderer()->drawEllipse(baseX, baseY, turboRadius, turboRadius, 1, 0);
     } else if (this->_shape == GP_SHAPE_SQUARE) {
         uint16_t sizeX = (this->_sizeX) * scaleX + this->getViewport().left;

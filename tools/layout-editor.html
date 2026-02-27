@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rushbox Layout Editor</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; display: flex; height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 300px; background: #16213e; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid #333; }
+.sidebar h2 { font-size: 16px; color: #a0c4ff; }
+.sidebar label { font-size: 12px; color: #999; display: block; margin-bottom: 2px; }
+.sidebar input, .sidebar select { width: 100%; padding: 6px 8px; background: #0f3460; border: 1px solid #444; color: #fff; border-radius: 4px; font-size: 13px; }
+.sidebar input:focus, .sidebar select:focus { outline: none; border-color: #a0c4ff; }
+.sidebar button { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.btn-primary { background: #0d6efd; color: #fff; }
+.btn-primary:hover { background: #0b5ed7; }
+.btn-danger { background: #dc3545; color: #fff; }
+.btn-danger:hover { background: #bb2d3b; }
+.btn-success { background: #198754; color: #fff; }
+.btn-success:hover { background: #157347; }
+.btn-outline { background: transparent; border: 1px solid #666; color: #ccc; }
+.btn-outline:hover { background: #333; }
+.btn-row { display: flex; gap: 6px; }
+.btn-row button { flex: 1; }
+.divider { border-top: 1px solid #333; margin: 4px 0; }
+
+/* Pin list */
+.pin-list { flex: 1; overflow-y: auto; }
+.pin-item { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.pin-item:hover { background: #1a3a5c; }
+.pin-item.selected { background: #0d6efd33; border: 1px solid #0d6efd; }
+.pin-item .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pin-item .info { flex: 1; }
+
+/* Canvas area */
+.canvas-area { flex: 1; display: flex; flex-direction: column; }
+.toolbar { display: flex; gap: 8px; padding: 8px 16px; background: #16213e; align-items: center; border-bottom: 1px solid #333; flex-wrap: wrap; }
+.toolbar label { font-size: 12px; color: #999; margin-right: 4px; }
+.toolbar input { width: 60px; padding: 4px 6px; background: #0f3460; border: 1px solid #444; color: #fff; border-radius: 4px; font-size: 12px; }
+.canvas-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; overflow: auto; }
+.canvas-container { position: relative; background: #222; border: 2px solid #444; border-radius: 8px; image-rendering: pixelated; }
+
+/* Buttons on canvas */
+.canvas-btn { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: grab; user-select: none; transition: box-shadow 0.1s; font-family: inherit; aspect-ratio: 1; }
+.canvas-btn:hover { box-shadow: 0 0 0 3px rgba(160, 196, 255, 0.4); }
+.canvas-btn.dragging { cursor: grabbing; z-index: 100; box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.6); }
+.canvas-btn.selected { box-shadow: 0 0 0 3px #0d6efd; z-index: 50; }
+.canvas-btn .btn-label { font-weight: 600; line-height: 1; }
+.canvas-btn .btn-pin { opacity: 0.6; line-height: 1; }
+
+/* Group colors */
+.group-dpad { background: #1a3a5c; border: 2px solid #3d8bfd; color: #9ec5fe; }
+.group-main { background: #1a3a2a; border: 2px solid #3dd68c; color: #a3cfbb; }
+.group-aux { background: #3d2a14; border: 2px solid #fd9843; color: #feb272; }
+.group-trigger { background: #2a1a4e; border: 2px solid #9461d9; color: #c29fec; }
+.group-addon { background: #2c3034; border: 2px solid #6c757d; color: #adb5bd; }
+
+/* Output modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: #16213e; border: 1px solid #444; border-radius: 8px; padding: 20px; width: 700px; max-height: 80vh; display: flex; flex-direction: column; }
+.modal h3 { margin-bottom: 12px; color: #a0c4ff; }
+.modal textarea { flex: 1; min-height: 400px; background: #0a0a1a; color: #6fdd6f; border: 1px solid #333; border-radius: 4px; padding: 12px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; resize: none; }
+.modal .btn-row { margin-top: 12px; }
+.modal .export-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.modal .export-tab { padding: 6px 12px; border: 1px solid #444; background: transparent; color: #ccc; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 13px; }
+.modal .export-tab.active { background: #0a0a1a; color: #6fdd6f; border-bottom-color: #0a0a1a; }
+
+/* Import section */
+.import-section textarea { width: 100%; height: 80px; background: #0f3460; border: 1px solid #444; color: #fff; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 11px; resize: vertical; }
+
+/* Coordinate display */
+.coord-display { font-size: 11px; color: #666; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+	<h2>Layout Editor (128x64)</h2>
+
+	<div>
+		<label>Board Label</label>
+		<input type="text" id="boardLabel" value="RushboxClick" />
+	</div>
+	<div class="btn-row">
+		<div style="flex:1"><label>Width (px)</label><input type="number" id="canvasW" value="128" /></div>
+		<div style="flex:1"><label>Height (px)</label><input type="number" id="canvasH" value="64" /></div>
+	</div>
+
+	<div class="divider"></div>
+
+	<h2>Add Pin</h2>
+	<div class="btn-row">
+		<div style="flex:1"><label>GPIO #</label><input type="number" id="newPin" value="0" min="0" max="29" /></div>
+		<div style="flex:1"><label>Label</label><input type="text" id="newLabel" value="" /></div>
+	</div>
+	<div class="btn-row">
+		<div style="flex:1"><label>Group</label>
+			<select id="newGroup">
+				<option value="dpad">dpad</option>
+				<option value="main" selected>main</option>
+				<option value="aux">aux</option>
+				<option value="trigger">trigger</option>
+				<option value="addon">addon</option>
+			</select>
+		</div>
+		<div style="flex:1"><label>Size</label>
+			<select id="newSize">
+				<option value="sm">sm (r=3)</option>
+				<option value="md" selected>md (r=6)</option>
+				<option value="lg">lg (r=7)</option>
+			</select>
+		</div>
+	</div>
+	<button class="btn-primary" onclick="addPin()">Add Pin</button>
+
+	<div class="divider"></div>
+
+	<h2>Selected Pin</h2>
+	<div id="selectedInfo" style="font-size: 12px; color: #888;">No selection</div>
+	<div id="selectedEdit" style="display:none;">
+		<div class="btn-row">
+			<div style="flex:1"><label>Label</label><input type="text" id="editLabel" /></div>
+			<div style="flex:1"><label>GPIO #</label><input type="number" id="editPin" min="0" max="29" /></div>
+		</div>
+		<div class="btn-row">
+			<div style="flex:1"><label>X (px)</label><input type="number" id="editX" min="0" max="127" /></div>
+			<div style="flex:1"><label>Y (px)</label><input type="number" id="editY" min="0" max="63" /></div>
+		</div>
+		<div class="btn-row">
+			<div style="flex:1"><label>Group</label>
+				<select id="editGroup">
+					<option value="dpad">dpad</option>
+					<option value="main">main</option>
+					<option value="aux">aux</option>
+					<option value="trigger">trigger</option>
+					<option value="addon">addon</option>
+				</select>
+			</div>
+			<div style="flex:1"><label>Size</label>
+				<select id="editSize">
+					<option value="sm">sm (r=3)</option>
+					<option value="md">md (r=6)</option>
+					<option value="lg">lg (r=7)</option>
+				</select>
+			</div>
+		</div>
+		<div class="btn-row" style="margin-top:6px;">
+			<button class="btn-primary" onclick="applyEdit()">Apply</button>
+			<button class="btn-danger" onclick="deleteSelected()">Delete</button>
+		</div>
+	</div>
+
+	<div class="divider"></div>
+
+	<h2>Pins</h2>
+	<div class="pin-list" id="pinList"></div>
+
+	<div class="divider"></div>
+
+	<div class="btn-row">
+		<button class="btn-success" onclick="showExport()">Export</button>
+		<button class="btn-outline" onclick="showImport()">Import JSON</button>
+	</div>
+	<div class="btn-row">
+		<button class="btn-outline" style="width:100%;" onclick="document.getElementById('fileInput').click()">Load File</button>
+		<input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadFile(event)" />
+		<button class="btn-outline" style="width:100%;" onclick="saveFile()">Save File</button>
+	</div>
+
+	<div class="import-section" id="importSection" style="display:none;">
+		<label>Paste JSON</label>
+		<textarea id="importData" placeholder='{"boardLabel":"...","width":128,"height":64,"buttons":[...]}'></textarea>
+		<button class="btn-primary" style="margin-top:6px;width:100%;" onclick="doImport()">Import</button>
+	</div>
+</div>
+
+<div class="canvas-area">
+	<div class="toolbar">
+		<label>Zoom:</label>
+		<input type="range" id="zoom" min="2" max="10" step="0.5" value="6" style="width:120px;" oninput="updateCanvas()" />
+		<span id="zoomLabel">600%</span>
+		<label style="margin-left:16px;">Snap:</label>
+		<input type="number" id="snapGrid" value="1" min="1" max="10" style="width:50px;" />
+		<label style="margin-left:16px;">Show grid</label>
+		<input type="checkbox" id="showGrid" checked onchange="updateCanvas()" />
+		<span id="cursorCoord" style="margin-left:16px; font-size:12px; color:#666;"></span>
+	</div>
+	<div class="canvas-wrapper" id="canvasWrapper">
+		<div class="canvas-container" id="canvas"></div>
+	</div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="exportModal">
+	<div class="modal">
+		<h3>Export Layout</h3>
+		<div class="export-tabs">
+			<button class="export-tab active" onclick="switchExportTab('json')">JSON</button>
+			<button class="export-tab" onclick="switchExportTab('oled')">OLED Macro</button>
+		</div>
+		<textarea id="exportOutput" readonly></textarea>
+		<div class="btn-row">
+			<button class="btn-primary" onclick="copyExport()">Copy</button>
+			<button class="btn-outline" onclick="closeExport()">Close</button>
+		</div>
+	</div>
+</div>
+
+<script>
+// OLED radius for each size (matches GP2040-CE existing layouts)
+const SIZE_RADIUS = { sm: 3, md: 6, lg: 7 };
+// Display size on canvas (in layout pixels)
+const SIZE_DISPLAY = { sm: 6, md: 12, lg: 14 };
+
+let buttons = [];
+let selectedIdx = -1;
+let dragging = false;
+let dragOffset = { x: 0, y: 0 };
+let currentExportTab = 'json';
+
+function getCanvasSize() {
+	const zoom = parseFloat(document.getElementById('zoom').value);
+	const w = parseInt(document.getElementById('canvasW').value) || 128;
+	const h = parseInt(document.getElementById('canvasH').value) || 64;
+	return { w: w * zoom, h: h * zoom, baseW: w, baseH: h, zoom };
+}
+
+function snap(val) {
+	const grid = parseInt(document.getElementById('snapGrid').value) || 1;
+	return Math.round(val / grid) * grid;
+}
+
+function updateCanvas() {
+	const { w, h, baseW, baseH, zoom } = getCanvasSize();
+	const canvas = document.getElementById('canvas');
+	canvas.style.width = w + 'px';
+	canvas.style.height = h + 'px';
+
+	document.getElementById('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+
+	// Draw grid (1px grid lines)
+	const showGrid = document.getElementById('showGrid').checked;
+	if (showGrid) {
+		canvas.style.backgroundImage = `
+			linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+			linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)
+		`;
+		canvas.style.backgroundSize = `${zoom}px ${zoom}px, ${zoom}px ${zoom}px, ${zoom * 8}px ${zoom * 8}px, ${zoom * 8}px ${zoom * 8}px`;
+	} else {
+		canvas.style.backgroundImage = 'none';
+	}
+
+	// Draw center line (x=64 divider for A/B split)
+	let centerLine = canvas.querySelector('.center-line');
+	if (!centerLine) {
+		centerLine = document.createElement('div');
+		centerLine.className = 'center-line';
+		centerLine.style.cssText = 'position:absolute;top:0;bottom:0;width:1px;background:rgba(255,100,100,0.3);pointer-events:none;z-index:10;';
+		canvas.appendChild(centerLine);
+	}
+	centerLine.style.left = (64 * zoom) + 'px';
+
+	// Re-render buttons
+	canvas.querySelectorAll('.canvas-btn').forEach(el => el.remove());
+	buttons.forEach((btn, i) => {
+		const el = document.createElement('div');
+		const displaySize = SIZE_DISPLAY[btn.size || 'md'];
+		const sizePx = displaySize * zoom;
+		const fontSize = Math.max(8, sizePx * 0.25);
+		const pinFontSize = Math.max(6, sizePx * 0.16);
+		el.className = `canvas-btn group-${btn.group}${i === selectedIdx ? ' selected' : ''}`;
+		el.style.left = (btn.x * zoom) + 'px';
+		el.style.top = (btn.y * zoom) + 'px';
+		el.style.width = sizePx + 'px';
+		el.style.height = sizePx + 'px';
+		el.style.fontSize = fontSize + 'px';
+		el.innerHTML = `<span class="btn-label">${btn.label || '?'}</span><span class="btn-pin" style="font-size:${pinFontSize}px">GP${btn.pin}</span>`;
+		el.dataset.idx = i;
+
+		el.addEventListener('mousedown', (e) => {
+			e.preventDefault();
+			selectedIdx = i;
+			dragging = true;
+			const rect = el.getBoundingClientRect();
+			dragOffset.x = e.clientX - rect.left - rect.width / 2;
+			dragOffset.y = e.clientY - rect.top - rect.height / 2;
+			el.classList.add('dragging');
+			updatePinList();
+			updateSelectedInfo();
+			updateCanvas();
+		});
+
+		canvas.appendChild(el);
+	});
+
+	updatePinList();
+}
+
+// Show cursor coordinates on canvas
+document.getElementById('canvas').addEventListener('mousemove', (e) => {
+	if (dragging) return;
+	const canvas = document.getElementById('canvas');
+	const rect = canvas.getBoundingClientRect();
+	const { zoom, baseW, baseH } = getCanvasSize();
+	const x = Math.round((e.clientX - rect.left) / zoom);
+	const y = Math.round((e.clientY - rect.top) / zoom);
+	if (x >= 0 && x < baseW && y >= 0 && y < baseH) {
+		document.getElementById('cursorCoord').textContent = `x:${x} y:${y}`;
+	}
+});
+
+document.addEventListener('mousemove', (e) => {
+	if (!dragging || selectedIdx < 0) return;
+	const canvas = document.getElementById('canvas');
+	const rect = canvas.getBoundingClientRect();
+	const { zoom, baseW, baseH } = getCanvasSize();
+	let x = Math.round((e.clientX - dragOffset.x - rect.left) / zoom);
+	let y = Math.round((e.clientY - dragOffset.y - rect.top) / zoom);
+	x = snap(Math.max(0, Math.min(baseW - 1, x)));
+	y = snap(Math.max(0, Math.min(baseH - 1, y)));
+	buttons[selectedIdx].x = x;
+	buttons[selectedIdx].y = y;
+	updateCanvas();
+	updateSelectedInfo();
+});
+
+document.addEventListener('mouseup', () => {
+	if (dragging) {
+		dragging = false;
+		document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+	}
+});
+
+// Click on canvas background to deselect
+document.getElementById('canvas').addEventListener('mousedown', (e) => {
+	if (e.target.id === 'canvas') {
+		selectedIdx = -1;
+		updateCanvas();
+		updateSelectedInfo();
+	}
+});
+
+function addPin() {
+	const baseW = parseInt(document.getElementById('canvasW').value) || 128;
+	const baseH = parseInt(document.getElementById('canvasH').value) || 64;
+	const pin = parseInt(document.getElementById('newPin').value);
+	const label = document.getElementById('newLabel').value || `GP${pin}`;
+	const group = document.getElementById('newGroup').value;
+	const size = document.getElementById('newSize').value;
+	buttons.push({ pin, x: Math.round(baseW / 2), y: Math.round(baseH / 2), label, group, size });
+	selectedIdx = buttons.length - 1;
+	updateCanvas();
+	updateSelectedInfo();
+}
+
+function deleteSelected() {
+	if (selectedIdx < 0) return;
+	buttons.splice(selectedIdx, 1);
+	selectedIdx = -1;
+	updateCanvas();
+	updateSelectedInfo();
+}
+
+function updateSelectedInfo() {
+	const info = document.getElementById('selectedInfo');
+	const edit = document.getElementById('selectedEdit');
+	if (selectedIdx < 0 || !buttons[selectedIdx]) {
+		info.textContent = 'No selection';
+		info.style.display = 'block';
+		edit.style.display = 'none';
+		return;
+	}
+	const btn = buttons[selectedIdx];
+	const side = btn.x < 64 ? 'A (left)' : 'B (right)';
+	info.textContent = `GP${btn.pin} — x:${btn.x} y:${btn.y} — ${side}`;
+	info.style.display = 'block';
+	edit.style.display = 'block';
+	document.getElementById('editLabel').value = btn.label;
+	document.getElementById('editPin').value = btn.pin;
+	document.getElementById('editX').value = btn.x;
+	document.getElementById('editY').value = btn.y;
+	document.getElementById('editGroup').value = btn.group;
+	document.getElementById('editSize').value = btn.size || 'md';
+}
+
+function applyEdit() {
+	if (selectedIdx < 0) return;
+	buttons[selectedIdx].label = document.getElementById('editLabel').value;
+	buttons[selectedIdx].pin = parseInt(document.getElementById('editPin').value);
+	buttons[selectedIdx].x = parseInt(document.getElementById('editX').value);
+	buttons[selectedIdx].y = parseInt(document.getElementById('editY').value);
+	buttons[selectedIdx].group = document.getElementById('editGroup').value;
+	buttons[selectedIdx].size = document.getElementById('editSize').value;
+	updateCanvas();
+	updateSelectedInfo();
+}
+
+function updatePinList() {
+	const list = document.getElementById('pinList');
+	list.innerHTML = '';
+	buttons.forEach((btn, i) => {
+		const item = document.createElement('div');
+		item.className = `pin-item${i === selectedIdx ? ' selected' : ''}`;
+		const side = btn.x < 64 ? 'A' : 'B';
+		item.innerHTML = `
+			<div class="dot group-${btn.group}" style="border:1px solid"></div>
+			<div class="info">GP${btn.pin} ${btn.label} (${btn.x},${btn.y}) [${btn.size || 'md'}] ${side}</div>
+		`;
+		item.onclick = () => {
+			selectedIdx = i;
+			updateCanvas();
+			updateSelectedInfo();
+		};
+		list.appendChild(item);
+	});
+}
+
+function generateJsonExport() {
+	const boardLabel = document.getElementById('boardLabel').value;
+	const w = parseInt(document.getElementById('canvasW').value);
+	const h = parseInt(document.getElementById('canvasH').value);
+	const data = {
+		boardLabel,
+		width: w,
+		height: h,
+		buttons: buttons.map(btn => {
+			const obj = { pin: btn.pin, x: btn.x, y: btn.y, label: btn.label, group: btn.group };
+			if (btn.size && btn.size !== 'md') obj.size = btn.size;
+			return obj;
+		}),
+	};
+	return JSON.stringify(data, null, 2);
+}
+
+function generateOledExport() {
+	const leftBtns = buttons.filter(b => b.x < 64).sort((a, b) => a.y - b.y || a.x - b.x);
+	const rightBtns = buttons.filter(b => b.x >= 64).sort((a, b) => a.y - b.y || a.x - b.x);
+
+	function makeEntry(btn) {
+		const r = SIZE_RADIUS[btn.size || 'md'];
+		const x = btn.x < 64 ? btn.x : btn.x - 64;
+		return `\t{GP_ELEMENT_PIN_BUTTON, {${x}, ${btn.y}, ${r}, ${r}, 1, 1, ${btn.pin}, GP_SHAPE_ELLIPSE}},`;
+	}
+
+	let output = '// LEFT HALF (x < 64)\n';
+	output += '#define DEFAULT_BOARD_LAYOUT_A { \\\n';
+	output += leftBtns.map(makeEntry).join(' \\\n');
+	output += ' \\\n}\n\n';
+
+	output += '// RIGHT HALF (x >= 64, coordinates offset by -64)\n';
+	output += '#define DEFAULT_BOARD_LAYOUT_B { \\\n';
+	output += rightBtns.map(makeEntry).join(' \\\n');
+	output += ' \\\n}\n\n';
+
+	output += '// Add to BoardConfig.h:\n';
+	output += '#define BUTTON_LAYOUT BUTTON_LAYOUT_BOARD_DEFINED_A\n';
+	output += '#define BUTTON_LAYOUT_RIGHT BUTTON_LAYOUT_BOARD_DEFINED_B\n';
+
+	return output;
+}
+
+function switchExportTab(tab) {
+	currentExportTab = tab;
+	document.querySelectorAll('.export-tab').forEach(el => el.classList.remove('active'));
+	document.querySelector(`.export-tab[onclick*="${tab}"]`).classList.add('active');
+	document.getElementById('exportOutput').value = tab === 'json' ? generateJsonExport() : generateOledExport();
+}
+
+function showExport() {
+	document.getElementById('exportOutput').value = currentExportTab === 'json' ? generateJsonExport() : generateOledExport();
+	document.getElementById('exportModal').classList.add('show');
+}
+
+function closeExport() {
+	document.getElementById('exportModal').classList.remove('show');
+}
+
+function copyExport() {
+	const textarea = document.getElementById('exportOutput');
+	textarea.select();
+	navigator.clipboard.writeText(textarea.value);
+}
+
+function showImport() {
+	const sec = document.getElementById('importSection');
+	sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+}
+
+function doImport() {
+	try {
+		const raw = document.getElementById('importData').value.trim();
+		let data;
+		const parsed = JSON.parse(raw);
+		if (Array.isArray(parsed)) {
+			data = parsed;
+		} else if (parsed.buttons) {
+			data = parsed.buttons;
+			if (parsed.boardLabel) document.getElementById('boardLabel').value = parsed.boardLabel;
+			if (parsed.width) document.getElementById('canvasW').value = parsed.width;
+			if (parsed.height) document.getElementById('canvasH').value = parsed.height;
+		}
+		buttons = data.map(b => ({
+			pin: b.pin,
+			x: Math.round(b.x),
+			y: Math.round(b.y),
+			label: b.label || `GP${b.pin}`,
+			group: b.group || 'main',
+			size: b.size || 'md',
+		}));
+		selectedIdx = -1;
+		updateCanvas();
+		updateSelectedInfo();
+		document.getElementById('importSection').style.display = 'none';
+		alert('Imported ' + buttons.length + ' pins');
+	} catch (e) {
+		alert('Import error: ' + e.message);
+	}
+}
+
+function loadFile(event) {
+	const file = event.target.files[0];
+	if (!file) return;
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		try {
+			const parsed = JSON.parse(e.target.result);
+			let data;
+			if (Array.isArray(parsed)) {
+				data = parsed;
+			} else if (parsed.buttons) {
+				data = parsed.buttons;
+				if (parsed.boardLabel) document.getElementById('boardLabel').value = parsed.boardLabel;
+				if (parsed.width) document.getElementById('canvasW').value = parsed.width;
+				if (parsed.height) document.getElementById('canvasH').value = parsed.height;
+			} else {
+				alert('Invalid layout JSON: no "buttons" array found');
+				return;
+			}
+			buttons = data.map(b => ({
+				pin: b.pin,
+				x: Math.round(b.x),
+				y: Math.round(b.y),
+				label: b.label || `GP${b.pin}`,
+				group: b.group || 'main',
+				size: b.size || 'md',
+			}));
+			selectedIdx = -1;
+			updateCanvas();
+			updateSelectedInfo();
+			alert('Loaded ' + buttons.length + ' pins from ' + file.name);
+		} catch (err) {
+			alert('Load error: ' + err.message);
+		}
+	};
+	reader.readAsText(file);
+	event.target.value = '';
+}
+
+function saveFile() {
+	const json = generateJsonExport();
+	const boardLabel = document.getElementById('boardLabel').value;
+	const blob = new Blob([json], { type: 'application/json' });
+	const a = document.createElement('a');
+	a.href = URL.createObjectURL(blob);
+	a.download = 'BoardLayout.json';
+	a.click();
+	URL.revokeObjectURL(a.href);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+	if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+	if (e.key === 'Delete' || e.key === 'Backspace') {
+		deleteSelected();
+	}
+	if (selectedIdx < 0) return;
+	const baseW = parseInt(document.getElementById('canvasW').value) || 128;
+	const baseH = parseInt(document.getElementById('canvasH').value) || 64;
+	const step = e.shiftKey ? 5 : 1;
+	if (e.key === 'ArrowLeft') { buttons[selectedIdx].x = snap(Math.max(0, buttons[selectedIdx].x - step)); updateCanvas(); updateSelectedInfo(); e.preventDefault(); }
+	if (e.key === 'ArrowRight') { buttons[selectedIdx].x = snap(Math.min(baseW - 1, buttons[selectedIdx].x + step)); updateCanvas(); updateSelectedInfo(); e.preventDefault(); }
+	if (e.key === 'ArrowUp') { buttons[selectedIdx].y = snap(Math.max(0, buttons[selectedIdx].y - step)); updateCanvas(); updateSelectedInfo(); e.preventDefault(); }
+	if (e.key === 'ArrowDown') { buttons[selectedIdx].y = snap(Math.min(baseH - 1, buttons[selectedIdx].y + step)); updateCanvas(); updateSelectedInfo(); e.preventDefault(); }
+});
+
+// Canvas size change listeners
+document.getElementById('canvasW').addEventListener('change', updateCanvas);
+document.getElementById('canvasH').addEventListener('change', updateCanvas);
+
+// Initialize
+updateCanvas();
+</script>
+</body>
+</html>

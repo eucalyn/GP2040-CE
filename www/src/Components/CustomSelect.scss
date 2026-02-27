@@ -1,9 +1,12 @@
 .react-select__container {
 	flex-grow: 1;
-	.react-select__menu {
-		background-color: var(--bs-body-bg);
-		border: var(--bs-border-width) solid var(--bs-border-color-translucent);
-	}
+}
+
+// Menu styles — applied both inside container and when portaled to body
+.react-select__menu {
+	background-color: var(--bs-body-bg);
+	border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+	color: var(--bs-body-color);
 }
 
 .react-select__control {
@@ -41,6 +44,7 @@
 
 .react-select__option {
 	&.react-select__option {
+		color: var(--bs-body-color);
 		&--is-focused {
 			background-color: var(--bs-tertiary-bg);
 		}
@@ -50,6 +54,10 @@
 			color: white;
 		}
 	}
+}
+
+.react-select__group-heading {
+	color: var(--bs-secondary-color);
 }
 
 [data-bs-theme="dark"] {

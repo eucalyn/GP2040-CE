@@ -11,6 +11,7 @@ import { useShallow } from 'zustand/react/shallow';
 import {
 	Alert,
 	Button,
+	ButtonGroup,
 	Col,
 	Form,
 	FormCheck,
@@ -29,19 +30,23 @@ import useProfilesStore, {
 	MaskPayload,
 	MAX_PROFILES,
 } from '../Store/useProfilesStore';
+import useSystemStats from '../Store/useSystemStats';
 
 import Section from '../Components/Section';
 import CustomSelect from '../Components/CustomSelect';
 import CaptureButton from '../Components/CaptureButton';
+import VisualPinLayout from '../Components/VisualPinLayout';
 
 import { BUTTON_MASKS, DPAD_MASKS, getButtonLabels } from '../Data/Buttons';
 import { BUTTON_ACTIONS, PinActionKeys, PinActionValues } from '../Data/Pins';
+import { getBoardLayout, BoardLayout } from '../Data/BoardLayouts';
 import './PinMapping.scss';
 import { MultiValue, SingleValue } from 'react-select';
 import InfoCircle from '../Icons/InfoCircle';
 import WebApi from '../Services/WebApi';
 
-type OptionType = {
+// Exported for reuse by VisualPinLayout / PinAssignmentPopover
+export type OptionType = {
 	label: string;
 	value: PinActionValues;
 	type: string;
@@ -66,7 +71,7 @@ const isNonSelectable = (action: PinActionValues) =>
 		...disabledOptions,
 	].includes(action);
 
-const isDisabled = (action: PinActionValues) =>
+export const isDisabled = (action: PinActionValues) =>
 	disabledOptions.includes(action);
 
 const options = Object.entries(BUTTON_ACTIONS)
@@ -88,7 +93,7 @@ const options = Object.entries(BUTTON_ACTIONS)
 		};
 	});
 
-const groupedOptions = [
+export const groupedOptions = [
 	{
 		label: 'Buttons',
 		options: options.filter(({ type }) => type !== 'action'),
@@ -99,7 +104,7 @@ const groupedOptions = [
 	},
 ];
 
-const getMultiValue = (pinData: MaskPayload) => {
+export const getMultiValue = (pinData: MaskPayload) => {
 	if (pinData.action === BUTTON_ACTIONS.NONE) return;
 	if (isDisabled(pinData.action)) {
 		const actionKey = invert(BUTTON_ACTIONS)[pinData.action];
@@ -268,10 +273,14 @@ const PinSelectList = memo(function PinSelectList({
 	);
 });
 
+type ViewMode = 'visual' | 'list';
+
 const PinSection = memo(function PinSection({
 	profileIndex,
+	boardLayout,
 }: {
 	profileIndex: number;
+	boardLayout: BoardLayout | null;
 }) {
 	const { t } = useTranslation('');
 	const copyBaseProfile = useProfilesStore((state) => state.copyBaseProfile);
@@ -290,6 +299,9 @@ const PinSection = memo(function PinSection({
 		});
 
 	const [activeProfile, setActiveProfile] = useState(0);
+	const [viewMode, setViewMode] = useState<ViewMode>(
+		boardLayout ? 'visual' : 'list',
+	);
 
 	const { updateUsedPins, buttonLabels, setLoading } = useContext(AppContext);
 	const { buttonLabelType, swapTpShareLabels } = buttonLabels;
@@ -374,7 +386,34 @@ const PinSection = memo(function PinSection({
 					</Row>
 					<hr />
 
-					<PinSelectList profileIndex={profileIndex} />
+					{boardLayout && (
+						<div className="d-flex justify-content-end mb-2">
+							<ButtonGroup size="sm">
+								<Button
+									variant={viewMode === 'visual' ? 'primary' : 'outline-primary'}
+									onClick={() => setViewMode('visual')}
+								>
+									Visual
+								</Button>
+								<Button
+									variant={viewMode === 'list' ? 'primary' : 'outline-primary'}
+									onClick={() => setViewMode('list')}
+								>
+									List
+								</Button>
+							</ButtonGroup>
+						</div>
+					)}
+
+					{viewMode === 'visual' && boardLayout ? (
+						<VisualPinLayout
+							profileIndex={profileIndex}
+							layout={boardLayout}
+						/>
+					) : (
+						<PinSelectList profileIndex={profileIndex} />
+					)}
+
 					<div className="d-flex gap-3 my-3">
 						<CaptureButton
 							labels={Object.values(buttonNames)}
@@ -416,13 +455,20 @@ export default function PinMapping() {
 	const addProfile = useProfilesStore((state) => state.addProfile);
 	const profiles = useProfilesStore((state) => state.profiles);
 	const loadingProfiles = useProfilesStore((state) => state.loadingProfiles);
+	const getSystemStats = useSystemStats((state) => state.getSystemStats);
+	const boardLabel = useSystemStats(
+		(state) => state.boardConfigProperties.label,
+	);
 
 	const [pressedPin, setPressedPin] = useState<number | null>(null);
 	const { t } = useTranslation('');
 
 	useEffect(() => {
 		fetchProfiles();
+		getSystemStats();
 	}, []);
+
+	const boardLayout = boardLabel ? getBoardLayout(boardLabel) : null;
 
 	return (
 		<Tab.Container defaultActiveKey="profile-0">
@@ -478,7 +524,10 @@ export default function PinMapping() {
 					<Tab.Content>
 						{profiles.map((_, index) => (
 							<Tab.Pane key={`profile-${index}`} eventKey={`profile-${index}`}>
-								<PinSection profileIndex={index} />
+								<PinSection
+									profileIndex={index}
+									boardLayout={boardLayout}
+								/>
 							</Tab.Pane>
 						))}
 					</Tab.Content>
