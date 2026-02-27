@@ -118,6 +118,9 @@
 #ifndef DEFAULT_LOCK_HOTKEYS
     #define DEFAULT_LOCK_HOTKEYS false
 #endif
+#ifndef DEFAULT_SWITCH_TP_SHARE_FOR_DS4
+    #define DEFAULT_SWITCH_TP_SHARE_FOR_DS4 false
+#endif
 #ifndef DEFAULT_PS4CONTROLLER_TYPE
     #define DEFAULT_PS4CONTROLLER_TYPE PS4_CONTROLLER
 #endif
@@ -294,7 +297,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.gamepadOptions, dpadMode, DEFAULT_DPAD_MODE);
     INIT_UNSET_PROPERTY(config.gamepadOptions, socdMode, DEFAULT_SOCD_MODE);
     INIT_UNSET_PROPERTY(config.gamepadOptions, invertXAxis, false);
-    INIT_UNSET_PROPERTY(config.gamepadOptions, switchTpShareForDs4, false);
+    INIT_UNSET_PROPERTY(config.gamepadOptions, switchTpShareForDs4, DEFAULT_SWITCH_TP_SHARE_FOR_DS4);
     INIT_UNSET_PROPERTY(config.gamepadOptions, lockHotkeys, DEFAULT_LOCK_HOTKEYS);
     INIT_UNSET_PROPERTY(config.gamepadOptions, fourWayMode, false);
     INIT_UNSET_PROPERTY(config.gamepadOptions, profileNumber, 1);

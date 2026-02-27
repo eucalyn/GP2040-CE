@@ -1,0 +1,182 @@
+{
+  "boardLabel": "RushboxClick",
+  "width": 128,
+  "height": 64,
+  "buttons": [
+    {
+      "pin": 17,
+      "x": 40,
+      "y": 17,
+      "label": "17",
+      "group": "aux"
+    },
+    {
+      "pin": 20,
+      "x": 6,
+      "y": 27,
+      "label": "20",
+      "group": "aux"
+    },
+    {
+      "pin": 5,
+      "x": 20,
+      "y": 26,
+      "label": "Left",
+      "group": "dpad"
+    },
+    {
+      "pin": 4,
+      "x": 34,
+      "y": 28,
+      "label": "Down",
+      "group": "dpad"
+    },
+    {
+      "pin": 18,
+      "x": 67,
+      "y": 19,
+      "label": "18",
+      "group": "aux"
+    },
+    {
+      "pin": 19,
+      "x": 82,
+      "y": 15,
+      "label": "S2",
+      "group": "aux"
+    },
+    {
+      "pin": 27,
+      "x": 103,
+      "y": 6,
+      "label": "A2",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 28,
+      "x": 117,
+      "y": 6,
+      "label": "A1",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 3,
+      "x": 47,
+      "y": 32,
+      "label": "Right",
+      "group": "dpad"
+    },
+    {
+      "pin": 12,
+      "x": 77,
+      "y": 27,
+      "label": "B3",
+      "group": "main"
+    },
+    {
+      "pin": 13,
+      "x": 91,
+      "y": 24,
+      "label": "B4",
+      "group": "main"
+    },
+    {
+      "pin": 14,
+      "x": 106,
+      "y": 21,
+      "label": "R1",
+      "group": "main"
+    },
+    {
+      "pin": 15,
+      "x": 121,
+      "y": 21,
+      "label": "L1",
+      "group": "main"
+    },
+    {
+      "pin": 21,
+      "x": 64,
+      "y": 34,
+      "label": "21",
+      "group": "aux"
+    },
+    {
+      "pin": 8,
+      "x": 77,
+      "y": 41,
+      "label": "B1",
+      "group": "main"
+    },
+    {
+      "pin": 9,
+      "x": 91,
+      "y": 39,
+      "label": "B2",
+      "group": "main"
+    },
+    {
+      "pin": 10,
+      "x": 106,
+      "y": 36,
+      "label": "R2",
+      "group": "main"
+    },
+    {
+      "pin": 11,
+      "x": 121,
+      "y": 36,
+      "label": "L2",
+      "group": "main"
+    },
+    {
+      "pin": 22,
+      "x": 7,
+      "y": 56,
+      "label": "22",
+      "group": "aux",
+      "size": "lg"
+    },
+    {
+      "pin": 23,
+      "x": 40,
+      "y": 56,
+      "label": "L3",
+      "group": "aux",
+      "size": "lg"
+    },
+    {
+      "pin": 16,
+      "x": 57,
+      "y": 56,
+      "label": "Up",
+      "group": "dpad",
+      "size": "lg"
+    },
+    {
+      "pin": 24,
+      "x": 73,
+      "y": 56,
+      "label": "R3",
+      "group": "aux",
+      "size": "lg"
+    },
+    {
+      "pin": 25,
+      "x": 88,
+      "y": 54,
+      "label": "25",
+      "group": "aux"
+    },
+    {
+      "pin": 26,
+      "x": 120,
+      "y": 56,
+      "label": "S1",
+      "group": "aux",
+      "size": "lg"
+    }
+  ]
+}

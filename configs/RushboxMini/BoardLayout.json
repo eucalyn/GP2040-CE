@@ -1,0 +1,164 @@
+{
+  "boardLabel": "RushboxMini",
+  "width": 128,
+  "height": 64,
+  "buttons": [
+    {
+      "pin": 26,
+      "x": 103,
+      "y": 4,
+      "label": "S2",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 18,
+      "x": 6,
+      "y": 21,
+      "label": "18",
+      "group": "aux"
+    },
+    {
+      "pin": 2,
+      "x": 20,
+      "y": 20,
+      "label": "Left",
+      "group": "dpad"
+    },
+    {
+      "pin": 3,
+      "x": 34,
+      "y": 22,
+      "label": "Down",
+      "group": "dpad"
+    },
+    {
+      "pin": 27,
+      "x": 110,
+      "y": 4,
+      "label": "L3",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 28,
+      "x": 117,
+      "y": 4,
+      "label": "R3",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 29,
+      "x": 124,
+      "y": 4,
+      "label": "A1",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 4,
+      "x": 48,
+      "y": 25,
+      "label": "Right",
+      "group": "dpad"
+    },
+    {
+      "pin": 8,
+      "x": 77,
+      "y": 21,
+      "label": "B3",
+      "group": "main"
+    },
+    {
+      "pin": 9,
+      "x": 91,
+      "y": 18,
+      "label": "B4",
+      "group": "main"
+    },
+    {
+      "pin": 10,
+      "x": 106,
+      "y": 18,
+      "label": "R1",
+      "group": "main"
+    },
+    {
+      "pin": 11,
+      "x": 119,
+      "y": 25,
+      "label": "L1",
+      "group": "main",
+      "size": "lg"
+    },
+    {
+      "pin": 12,
+      "x": 77,
+      "y": 35,
+      "label": "B1",
+      "group": "main"
+    },
+    {
+      "pin": 13,
+      "x": 91,
+      "y": 33,
+      "label": "B2",
+      "group": "main"
+    },
+    {
+      "pin": 14,
+      "x": 106,
+      "y": 33,
+      "label": "R2",
+      "group": "main"
+    },
+    {
+      "pin": 15,
+      "x": 64,
+      "y": 28,
+      "label": "L2",
+      "group": "main"
+    },
+    {
+      "pin": 19,
+      "x": 44,
+      "y": 56,
+      "label": "L3",
+      "group": "aux",
+      "size": "lg"
+    },
+    {
+      "pin": 5,
+      "x": 61,
+      "y": 56,
+      "label": "Up",
+      "group": "dpad",
+      "size": "lg"
+    },
+    {
+      "pin": 20,
+      "x": 77,
+      "y": 53,
+      "label": "R3",
+      "group": "aux",
+      "size": "lg"
+    },
+    {
+      "pin": 25,
+      "x": 96,
+      "y": 4,
+      "label": "S1",
+      "group": "aux",
+      "size": "sm"
+    },
+    {
+      "pin": 21,
+      "x": 120,
+      "y": 56,
+      "label": "R3",
+      "group": "aux",
+      "size": "lg"
+    }
+  ]
+}
