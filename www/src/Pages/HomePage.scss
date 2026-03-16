@@ -1,0 +1,427 @@
+@use '../tokens' as *;
+
+// ============================================================================
+// Home Page — moimate Configurator
+// ============================================================================
+
+.home-page {
+	// full width, let pin mapping breathe
+}
+
+.home-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 60vh;
+}
+
+// ── Quick Settings ───────────────────────────────────────────────
+.quick-settings {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-bottom: 2.5rem;
+}
+
+// ── Sliding Pill Selector ─────────────────────────────────────────
+.pill-selector {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+
+	&__label {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--mm-text-tertiary);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		white-space: nowrap;
+		flex-shrink: 0;
+		min-width: 7rem;
+	}
+
+	&__track {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		background-color: var(--mm-bg-secondary);
+		border-radius: 999px;
+		padding: 0.35rem;
+		flex: 1;
+		max-width: 700px;
+		overflow-x: auto;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	&__pill {
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: $mm-accent-grad;
+		border-radius: 999px;
+		box-shadow:
+			0 1px 2px rgba(0, 0, 0, 0.3),
+			0 4px 8px rgba(0, 0, 0, 0.15),
+			inset 0 1px 0 rgba(255, 255, 255, 0.15);
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		            width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+		            height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	&__btn {
+		position: relative;
+		z-index: 1;
+		flex: 1 0 auto;
+		padding: 0.65rem 1rem;
+		background: none;
+		border: none;
+		border-radius: 999px;
+		color: var(--mm-text-tertiary);
+		font-size: 1rem;
+		text-align: center;
+		justify-content: center;
+		font-weight: 500;
+		cursor: pointer;
+		white-space: nowrap;
+		transition: color 0.2s ease;
+
+		&:hover:not(:disabled):not(&--active) {
+			color: var(--mm-text-primary);
+		}
+
+		&--active {
+			color: #fff;
+			font-weight: 600;
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+	}
+
+	// Narrow viewport: compact pill buttons
+	@media (max-width: 680px) {
+		gap: 0.5rem;
+
+		&__label {
+			min-width: auto;
+			font-size: 0.75rem;
+		}
+
+		&__btn {
+			padding: 0.5rem 0.75rem;
+			font-size: 0.85rem;
+		}
+	}
+}
+
+// ── Pin Mapping Section (the hero) ───────────────────────────────
+.pin-mapping-section {
+	// full width
+}
+
+.pin-mapping-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+	flex-wrap: wrap;
+
+	&__left {
+		display: flex;
+		align-items: baseline;
+		gap: 1rem;
+		flex-shrink: 0;
+
+		h2 {
+			margin: 0;
+			font-size: 1.8rem;
+			font-weight: 700;
+		}
+	}
+
+	&__board {
+		font-size: 0.9rem;
+		color: var(--mm-text-tertiary);
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+
+		// Override Bootstrap button inside actions to match pill style
+		.btn {
+			padding: 0.65rem 1.5rem;
+			border-radius: 999px;
+			font-size: 1rem;
+			font-weight: 500;
+			border: none;
+		}
+	}
+
+	@media (max-width: 680px) {
+		&__left h2 {
+			font-size: 1.4rem;
+		}
+
+		&__actions {
+			width: 100%;
+
+			.btn,
+			.header-action-btn {
+				padding: 0.5rem 1rem;
+				font-size: 0.85rem;
+			}
+		}
+	}
+}
+
+// ── Profile Bar (tabs + view toggle) ─────────────────────────────
+.profile-bar {
+	display: flex;
+	align-items: stretch;
+	border-bottom: 1px solid var(--mm-border);
+	overflow: hidden;
+}
+
+// ── Profile Tabs ──────────────────────────────────────────────────
+.profile-tabs {
+	display: flex;
+	gap: 0;
+	margin-bottom: 0;
+	border-bottom: none;
+	overflow-x: auto;
+	flex: 1;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+// ── View Toggle ──────────────────────────────────────────────────
+.view-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.5rem 1rem;
+	background: none;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	color: var(--mm-text-tertiary);
+	font-size: 0.8rem;
+	font-weight: 500;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.15s ease;
+	flex-shrink: 0;
+
+	svg {
+		width: 15px;
+		height: 15px;
+	}
+
+	&:hover {
+		color: var(--mm-text-primary);
+	}
+
+	&--active {
+		color: var(--mm-accent);
+		border-bottom-color: var(--mm-accent);
+	}
+}
+
+.profile-tab {
+	padding: 0.75rem 1.5rem;
+	background: none;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	color: var(--mm-text-tertiary);
+	font-size: 0.867rem;
+	font-weight: 500;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.15s ease;
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+
+	&:hover {
+		color: var(--mm-text-primary);
+	}
+
+	&--active {
+		color: var(--mm-accent);
+		border-bottom-color: var(--mm-accent);
+	}
+
+	&--disabled {
+		opacity: 0.5;
+	}
+
+	&--add {
+		color: var(--mm-text-tertiary);
+		font-size: 1.067rem;
+		padding: 0.6rem 0.8rem;
+
+		&:hover {
+			color: var(--mm-accent);
+		}
+	}
+
+	&__label {
+		font-family: var(--mm-font-body);
+	}
+
+	&__badge {
+		font-size: 0.667rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--mm-text-tertiary);
+		background-color: var(--mm-bg-tertiary);
+		padding: 0.0625rem 0.375rem;
+		border-radius: 3px;
+		letter-spacing: 0.04em;
+	}
+}
+
+// ── Pin Mapping Area ─────────────────────────────────────────────
+.pin-mapping-area {
+	background: $mm-surface-dark;
+	border-radius: 0 0 10px 10px;
+	padding: 1.75rem;
+	min-height: 320px;
+}
+
+// ── Disabled Profile Placeholder ─────────────────────────────────
+.profile-disabled-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 280px;
+	gap: 1.25rem;
+
+	p {
+		margin: 0;
+		font-size: 1rem;
+		color: var(--mm-text-tertiary);
+	}
+}
+
+// ── Header action buttons (pill-style, matching SOCD/Input Mode) ──
+.header-action-btn {
+	padding: 0.65rem 1.5rem;
+	background-color: var(--mm-bg-secondary);
+	border: none;
+	border-radius: 999px;
+	color: var(--mm-text-secondary);
+	font-size: 1rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	white-space: nowrap;
+
+	&:hover {
+		background-color: var(--mm-bg-tertiary);
+		color: var(--mm-text-primary);
+	}
+
+	&--save {
+		background: $mm-accent-grad;
+		color: #fff;
+		font-weight: 600;
+		width: 7rem;
+		text-align: center;
+		justify-content: center;
+		transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		flex-shrink: 0;
+		box-shadow:
+			0 1px 2px rgba(0, 0, 0, 0.3),
+			0 4px 8px rgba(0, 0, 0, 0.15),
+			inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+		&:hover {
+			background: $mm-accent-grad-hover;
+			color: #fff;
+		}
+
+		&:active {
+			box-shadow:
+				0 1px 2px rgba(0, 0, 0, 0.2),
+				inset 0 1px 3px rgba(0, 0, 0, 0.2);
+		}
+	}
+
+	&--saved {
+		background: $mm-success-grad;
+		color: #fff;
+		box-shadow:
+			0 1px 2px rgba(0, 0, 0, 0.25),
+			0 4px 8px rgba(0, 0, 0, 0.12),
+			inset 0 1px 0 rgba(255, 255, 255, 0.15);
+	}
+
+	&--error {
+		background: $mm-danger-grad;
+		color: #fff;
+		box-shadow:
+			0 1px 2px rgba(0, 0, 0, 0.25),
+			0 4px 8px rgba(0, 0, 0, 0.12),
+			inset 0 1px 0 rgba(255, 255, 255, 0.12);
+	}
+
+	@media (max-width: 680px) {
+		padding: 0.5rem 1rem;
+		font-size: 0.85rem;
+	}
+}
+
+
+// ── Pin List View (no board layout) ──────────────────────────────
+.pin-list-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+
+	@media (max-width: 680px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.pin-list-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+
+	&__label {
+		flex-shrink: 0;
+		width: 3.5rem;
+		font-size: 0.867rem;
+		color: var(--mm-text-tertiary);
+	}
+}
+
+// ── Home Footer ───────────────────────────────────────────────────
+.home-footer {
+	display: flex;
+	gap: 1.5rem;
+	padding-top: 1.5rem;
+	margin-top: 2.5rem;
+	border-top: 1px solid var(--mm-border);
+	font-size: 0.8rem;
+	color: var(--mm-text-tertiary);
+}

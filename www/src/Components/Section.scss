@@ -1,10 +1,71 @@
+// ============================================================================
+// Section — Rushbox Configurator
+// ============================================================================
+
 .card {
-	margin-bottom: 10px;
+	margin-bottom: 1.5rem;
+	background-color: var(--mm-bg-secondary);
+	border: 1px solid var(--mm-border);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.card-header {
+	background-color: var(--mm-bg-tertiary);
+	border-bottom: 1px solid var(--mm-border);
+	color: var(--mm-text-primary);
+	padding: 0.85rem 1.5rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+.card-body {
+	padding: 2rem;
+
+	// Add breathing room between all child elements
+	> * + * {
+		margin-top: 1.25rem;
+	}
+
+	// Form rows and groups
+	> .row,
+	> .mb-3,
+	> .mb-2,
+	> form > .row,
+	> form > .mb-3,
+	> form > .mb-2 {
+		margin-bottom: 1.5rem !important;
+	}
+
+	// Repeating elements (hotkey rows, etc.)
+	.d-flex + .d-flex,
+	.row + .row {
+		margin-top: 1rem;
+	}
+
+	// Alerts inside cards
+	.alert {
+		margin-bottom: 1.5rem;
+		border-radius: 8px;
+	}
+
+	// Form selects in a row
+	.form-select + .form-select,
+	.form-control + .form-control {
+		margin-top: 0.75rem;
+	}
+
+	// Horizontal rule
+	hr {
+		margin: 1.5rem 0;
+	}
 }
 
 .loading .spinner-border {
-	height: 6rem;
-	width: 6rem;
+	height: 4rem;
+	width: 4rem;
+	color: var(--mm-accent);
 }
 
 .loading-small {

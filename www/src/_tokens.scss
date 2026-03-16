@@ -1,0 +1,28 @@
+// ============================================================================
+// Shared SCSS tokens — import with @use '../tokens' as *
+// ============================================================================
+
+// -- base colors --
+$mm-bg-primary:    #3E3A39;
+$mm-bg-secondary:  #4A4544;
+$mm-bg-tertiary:   #565150;
+$mm-bg-elevated:   #4A4544;
+
+$mm-text-primary:   #FFFFFF;
+$mm-text-secondary: #D0CDCC;
+$mm-text-tertiary:  #A8A4A3;
+
+$mm-accent:  #3BBFBA;
+$mm-success: #A4F673;
+$mm-warning: #F6C85F;
+$mm-danger:  #E85D5D;
+
+$mm-border: #5C5756;
+
+// -- derived tokens --
+$mm-topnav-bg:     #342f2e;
+$mm-surface-dark:  linear-gradient(145deg, #3a3635, #353130);
+$mm-accent-grad:       linear-gradient(to bottom, #2fada8, #1f8a86);
+$mm-accent-grad-hover: linear-gradient(to bottom, #35b8b3, #238e8a);
+$mm-success-grad:      linear-gradient(to bottom, #6cc644, #539e2e);
+$mm-danger-grad:       linear-gradient(to bottom, #d04a4a, #b53535);

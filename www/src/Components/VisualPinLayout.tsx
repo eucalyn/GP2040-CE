@@ -9,7 +9,7 @@ import useProfilesStore, { MaskPayload } from '../Store/useProfilesStore';
 import { BoardLayout } from '../Data/BoardLayouts';
 import { BUTTON_ACTIONS, PinActionValues } from '../Data/Pins';
 import { getButtonLabels } from '../Data/Buttons';
-import { getMultiValue, OptionType } from '../Pages/PinMapping';
+import { getMultiValue, OptionType } from '../Data/PinOptions';
 
 import ButtonSpot from './ButtonSpot';
 import PinAssignmentPopover from './PinAssignmentPopover';

@@ -27,7 +27,6 @@ import omit from 'lodash/omit';
 
 import { AppContext } from '../Contexts/AppContext';
 import useProfilesStore, {
-	MaskPayload,
 	MAX_PROFILES,
 } from '../Store/useProfilesStore';
 import useSystemStats from '../Store/useSystemStats';
@@ -37,98 +36,23 @@ import CustomSelect from '../Components/CustomSelect';
 import CaptureButton from '../Components/CaptureButton';
 import VisualPinLayout from '../Components/VisualPinLayout';
 
-import { BUTTON_MASKS, DPAD_MASKS, getButtonLabels } from '../Data/Buttons';
-import { BUTTON_ACTIONS, PinActionKeys, PinActionValues } from '../Data/Pins';
+import { getButtonLabels } from '../Data/Buttons';
+import { BUTTON_ACTIONS, PinActionKeys } from '../Data/Pins';
 import { getBoardLayout, BoardLayout } from '../Data/BoardLayouts';
 import './PinMapping.scss';
 import { MultiValue, SingleValue } from 'react-select';
 import InfoCircle from '../Icons/InfoCircle';
 import WebApi from '../Services/WebApi';
 
-// Exported for reuse by VisualPinLayout / PinAssignmentPopover
-export type OptionType = {
-	label: string;
-	value: PinActionValues;
-	type: string;
-	customButtonMask: number;
-	customDpadMask: number;
-};
-
-const disabledOptions = [
-	BUTTON_ACTIONS.RESERVED,
-	BUTTON_ACTIONS.ASSIGNED_TO_ADDON,
-] as PinActionValues[];
-
-const getMask = (maskArr: { label: string; value: number }[], key: string) =>
-	maskArr.find(
-		({ label }) => label?.toUpperCase() === key.split('BUTTON_PRESS_')?.pop(),
-	);
-
-const isNonSelectable = (action: PinActionValues) =>
-	[
-		BUTTON_ACTIONS.NONE,
-		BUTTON_ACTIONS.CUSTOM_BUTTON_COMBO,
-		...disabledOptions,
-	].includes(action);
-
-export const isDisabled = (action: PinActionValues) =>
-	disabledOptions.includes(action);
-
-const options = Object.entries(BUTTON_ACTIONS)
-	.filter(([, value]) => !isNonSelectable(value))
-	.map(([key, value]) => {
-		const buttonMask = getMask(BUTTON_MASKS, key);
-		const dpadMask = getMask(DPAD_MASKS, key);
-
-		return {
-			label: key,
-			value,
-			type: buttonMask
-				? 'customButtonMask'
-				: dpadMask
-					? 'customDpadMask'
-					: 'action',
-			customButtonMask: buttonMask?.value || 0,
-			customDpadMask: dpadMask?.value || 0,
-		};
-	});
-
-export const groupedOptions = [
-	{
-		label: 'Buttons',
-		options: options.filter(({ type }) => type !== 'action'),
-	},
-	{
-		label: 'Actions',
-		options: options.filter(({ type }) => type === 'action'),
-	},
-];
-
-export const getMultiValue = (pinData: MaskPayload) => {
-	if (pinData.action === BUTTON_ACTIONS.NONE) return;
-	if (isDisabled(pinData.action)) {
-		const actionKey = invert(BUTTON_ACTIONS)[pinData.action];
-		return [
-			{
-				label: actionKey,
-				value: pinData.action,
-				type: 'action',
-				customButtonMask: pinData.customButtonMask,
-				customDpadMask: pinData.customDpadMask,
-			},
-		];
-	}
-
-	return pinData.action === BUTTON_ACTIONS.CUSTOM_BUTTON_COMBO
-		? options.filter(
-				({ type, customButtonMask, customDpadMask }) =>
-					(pinData.customButtonMask & customButtonMask &&
-						type === 'customButtonMask') ||
-					(pinData.customDpadMask & customDpadMask &&
-						type === 'customDpadMask'),
-			)
-		: options.filter((option) => option.value === pinData.action);
-};
+// Re-export shared pin option logic from Data/PinOptions
+// (extracted to keep this file closer to upstream for easier merges)
+export {
+	type OptionType,
+	groupedOptions,
+	getMultiValue,
+	isDisabled,
+} from '../Data/PinOptions';
+import { groupedOptions, getMultiValue, isDisabled, OptionType } from '../Data/PinOptions';
 
 const ProfileLabel = memo(function ProfileLabel({
 	profileIndex,

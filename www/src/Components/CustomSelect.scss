@@ -1,30 +1,40 @@
+// ============================================================================
+// CustomSelect (react-select) — moimate Dark Theme
+// ============================================================================
+
 .react-select__container {
 	flex-grow: 1;
 }
 
-// Menu styles — applied both inside container and when portaled to body
 .react-select__menu {
-	background-color: var(--bs-body-bg);
-	border: var(--bs-border-width) solid var(--bs-border-color-translucent);
-	color: var(--bs-body-color);
+	background-color: var(--mm-bg-elevated);
+	border: 1px solid var(--mm-border);
+	color: var(--mm-text-primary);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .react-select__control {
 	&.react-select__control {
-		background-color: transparent;
+		background-color: var(--mm-bg-secondary);
 		line-height: var(--bs-select-line-height);
-		border: var(--bs-border-width) solid var(--bs-border-color);
+		border: 1px solid var(--mm-border);
 		transition:
 			border-color 0.15s ease-in-out,
 			box-shadow 0.15s ease-in-out;
+		min-height: 34px;
+
 		&--is-disabled {
-			background-color: var(--bs-secondary-bg);
+			background-color: var(--mm-bg-tertiary);
+			opacity: 0.6;
 		}
+
 		&--is-focused {
-			box-shadow: none;
+			border-color: var(--mm-accent);
+			box-shadow: 0 0 0 2px rgba(59, 191, 186, 0.2);
 		}
+
 		&:hover {
-			border: var(--bs-border-width) solid var(--bs-border-color);
+			border-color: var(--mm-text-tertiary);
 		}
 	}
 }
@@ -32,39 +42,76 @@
 .react-select__value-container {
 	.react-select__single-value,
 	.react-select__input-container {
-		color: inherit;
+		color: var(--mm-text-primary);
 	}
+
+	.react-select__placeholder {
+		color: var(--mm-text-tertiary);
+	}
+
 	.react-select__multi-value {
-		background-color: var(--bs-secondary-bg);
+		background-color: var(--mm-bg-tertiary);
+		border: 1px solid var(--mm-border);
+		border-radius: 4px;
+
 		.react-select__multi-value__label {
-			color: inherit;
+			color: var(--mm-text-primary);
+			font-size: 0.8125rem;
+		}
+
+		.react-select__multi-value__remove {
+			color: var(--mm-text-tertiary);
+
+			&:hover {
+				background-color: rgba(232, 93, 93, 0.2);
+				color: var(--mm-danger);
+			}
 		}
 	}
 }
 
 .react-select__option {
 	&.react-select__option {
-		color: var(--bs-body-color);
+		color: var(--mm-text-primary);
+		font-size: 0.875rem;
+
 		&--is-focused {
-			background-color: var(--bs-tertiary-bg);
+			background-color: var(--mm-bg-tertiary);
 		}
+
 		&--is-selected,
 		&:active {
-			background-color: var(--bs-primary);
-			color: white;
+			background-color: var(--mm-accent);
+			color: #1a1a1a;
 		}
 	}
 }
 
 .react-select__group-heading {
-	color: var(--bs-secondary-color);
+	color: var(--mm-text-tertiary);
+	font-size: 0.6875rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
 }
 
-[data-bs-theme="dark"] {
-	.react-select__indicators .react-select__indicator {
-		color: inherit;
+.react-select__indicators {
+	.react-select__indicator-separator {
+		background-color: var(--mm-border);
+	}
+
+	.react-select__indicator {
+		color: var(--mm-text-tertiary);
+		padding: 4px 6px;
+
 		&:hover {
-			color: rgba(255, 255, 255, 0.75);
+			color: var(--mm-text-primary);
+		}
+	}
+
+	.react-select__clear-indicator {
+		&:hover {
+			color: var(--mm-danger);
 		}
 	}
 }

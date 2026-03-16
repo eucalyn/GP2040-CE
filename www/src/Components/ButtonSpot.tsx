@@ -19,7 +19,8 @@ const ButtonSpot = memo(function ButtonSpot({
 	const size = position.size || 'md';
 
 	return (
-		<div
+		<button
+			type="button"
 			className={[
 				'button-spot',
 				`button-spot--${position.group}`,
@@ -30,12 +31,13 @@ const ButtonSpot = memo(function ButtonSpot({
 			]
 				.filter(Boolean)
 				.join(' ')}
-			onClick={isDisabled ? undefined : onClick}
+			onClick={onClick}
+			disabled={isDisabled}
 			title={`GP${position.pin} - ${position.label}`}
 		>
 			<span className="button-spot__label">{actionLabel}</span>
 			<span className="button-spot__pin">GP{position.pin}</span>
-		</div>
+		</button>
 	);
 });
 

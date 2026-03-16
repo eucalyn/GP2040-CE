@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from 'react';
+import { memo, useCallback } from 'react';
 import { Overlay, Popover } from 'react-bootstrap';
 import { MultiValue, SingleValue } from 'react-select';
 import CustomSelect from './CustomSelect';
@@ -7,10 +7,10 @@ import { MaskPayload } from '../Store/useProfilesStore';
 import {
 	groupedOptions,
 	getMultiValue,
+	buildPinPayload,
 	isDisabled as isPinDisabled,
 	OptionType,
-} from '../Pages/PinMapping';
-import { BUTTON_ACTIONS } from '../Data/Pins';
+} from '../Data/PinOptions';
 
 type PinAssignmentPopoverProps = {
 	position: ButtonPosition;
@@ -33,53 +33,7 @@ const PinAssignmentPopover = memo(function PinAssignmentPopover({
 
 	const handleChange = useCallback(
 		(selected: MultiValue<OptionType> | SingleValue<OptionType>) => {
-			if (!selected || (Array.isArray(selected) && !selected.length)) {
-				onChange(pinKey, {
-					action: BUTTON_ACTIONS.NONE,
-					customButtonMask: 0,
-					customDpadMask: 0,
-				});
-			} else if (Array.isArray(selected) && selected.length > 1) {
-				const lastSelected = selected[selected.length - 1];
-				if (lastSelected.type === 'action') {
-					onChange(pinKey, {
-						action: lastSelected.value,
-						customButtonMask: 0,
-						customDpadMask: 0,
-					});
-				} else {
-					onChange(
-						pinKey,
-						selected.reduce(
-							(masks, option) => ({
-								...masks,
-								customButtonMask:
-									option.type === 'customButtonMask'
-										? masks.customButtonMask ^ option.customButtonMask
-										: masks.customButtonMask,
-								customDpadMask:
-									option.type === 'customDpadMask'
-										? masks.customDpadMask ^ option.customDpadMask
-										: masks.customDpadMask,
-							}),
-							{
-								action: BUTTON_ACTIONS.CUSTOM_BUTTON_COMBO,
-								customButtonMask: 0,
-								customDpadMask: 0,
-							},
-						),
-					);
-				}
-			} else {
-				const sel = Array.isArray(selected) ? selected[0] : selected;
-				if (sel) {
-					onChange(pinKey, {
-						action: sel.value,
-						customButtonMask: 0,
-						customDpadMask: 0,
-					});
-				}
-			}
+			onChange(pinKey, buildPinPayload(selected as OptionType[] | OptionType | null));
 		},
 		[pinKey, onChange],
 	);

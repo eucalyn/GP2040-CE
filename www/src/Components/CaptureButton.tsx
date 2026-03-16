@@ -103,7 +103,7 @@ const CaptureButton = ({
 					</Button>
 				</Modal.Footer>
 			</Modal>
-			<Button onClick={() => setTriggerCapture(true)}>
+			<Button variant="secondary" onClick={() => setTriggerCapture(true)}>
 				{small
 					? '🎮'
 					: `${

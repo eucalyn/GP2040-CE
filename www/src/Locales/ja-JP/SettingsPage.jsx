@@ -8,8 +8,8 @@ export default {
 	'input-mode-extra-label': 'Switch タッチパッドと Share',
 	'input-mode-options': {
 		none: 'モード未選択',
-		'nintendo-switch': '任天堂Switch',
-		'nintendo-switch-pro': '任天堂Switch Pro',
+		'nintendo-switch': 'Nintendo Switch',
+		'nintendo-switch-pro': 'Nintendo Switch Pro',
 		generic: '標準HID',
 		keyboard: 'キーボード',
 		mdmini: 'Sega Genesis/メガドライブ Mini',
@@ -41,7 +41,7 @@ export default {
 	},
 	'socd-cleaning-mode-label': 'SOCDクリーニングモード',
 	'socd-cleaning-mode-note':
-		'注：PS4、PS3、任天堂SwitchおよびミニコンソールシリーズのモードではSOCDクリーニングモード無効設定はできないため、ニュートラルSOCDクリーニングに設定されます。',
+		'注：PS4、PS3、Nintendo SwitchおよびミニコンソールシリーズのモードではSOCDクリーニングモード無効設定はできないため、ニュートラルSOCDクリーニングに設定されます。',
 	'socd-cleaning-mode-options': {
 		'up-priority': '上優先',
 		neutral: 'ニュートラル',

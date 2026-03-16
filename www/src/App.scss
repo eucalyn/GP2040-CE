@@ -1,4 +1,19 @@
-.body-content {
-	margin-top: 58px;
-	padding: 10px 20px;
+// ============================================================================
+// App Layout — TopNav + Main Content
+// ============================================================================
+
+.app-layout {
+	min-height: 100vh;
+}
+
+.main-content {
+	margin-top: var(--mm-topnav-height);
+	padding: 2rem 3rem;
+	min-height: calc(100vh - var(--mm-topnav-height));
+}
+
+@media (max-width: 767.98px) {
+	.main-content {
+		padding: 1.5rem 1rem;
+	}
 }

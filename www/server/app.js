@@ -17,11 +17,15 @@ const { pico: picoController } = JSON.parse(
 	readFileSync(path.resolve(__dirname, '../src/Data/Controllers.json'), 'utf8'),
 );
 
-// Structure pin mappings to include masks and profile label
-const createPinMappings = ({ profileLabel = 'Profile', enabled = true }) => {
-	let pinMappings = { profileLabel, enabled };
+// Rushbox-specific mock data (separated for easier upstream merges)
+import { rushboxClickPins, firmwareVersion } from './rushbox-mock-data.js';
 
-	for (const [key, value] of Object.entries(picoController)) {
+// Structure pin mappings to include masks and profile label
+const createPinMappings = ({ profileLabel = 'Profile', enabled = true, useRushbox = true }) => {
+	let pinMappings = { profileLabel, enabled };
+	const pins = useRushbox ? rushboxClickPins : picoController;
+
+	for (const [key, value] of Object.entries(pins)) {
 		pinMappings[key] = {
 			action: value,
 			customButtonMask: 0,
@@ -706,12 +710,7 @@ app.get('/api/getMacroAddonOptions', (req, res) => {
 });
 
 app.get('/api/getFirmwareVersion', (req, res) => {
-	return res.send({
-		boardConfigLabel: 'Pico',
-		boardConfigFileName: `GP2040_local-dev-server_Pico`,
-		boardConfig: 'Pico',
-		version: 'local-dev-server',
-	});
+	return res.send(firmwareVersion);
 });
 
 app.get('/api/getButtonLayoutCustomOptions', (req, res) => {

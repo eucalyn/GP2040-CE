@@ -50,7 +50,7 @@
       "x": 103,
       "y": 6,
       "label": "A2",
-      "group": "aux",
+      "group": "trigger",
       "size": "sm"
     },
     {
@@ -58,7 +58,7 @@
       "x": 117,
       "y": 6,
       "label": "A1",
-      "group": "aux",
+      "group": "trigger",
       "size": "sm"
     },
     {

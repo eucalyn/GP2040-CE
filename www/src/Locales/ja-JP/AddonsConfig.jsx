@@ -113,7 +113,7 @@ export default {
 	'socd-cleaning-mode-selection-slider-header-text':
 		'SOCD クリーナモード選択スライダー',
 	'socd-cleaning-mode-selection-slider-sub-header-text':
-		'注：PS4、PS3及び任天堂Switch モードではSOCDクリーナのモード無効化は非対応となり、SOCDニュートラル設定になります。',
+		'注：PS4、PS3及びNintendo Switch モードではSOCDクリーナのモード無効化は非対応となり、SOCDニュートラル設定になります。',
 	'socd-cleaning-mode-selection-slider-mode-default-label':
 		'SOCDクリーナ標準モード',
 	'ps4-mode-sub-header': '免責事項',

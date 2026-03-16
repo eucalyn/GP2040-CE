@@ -1,3 +1,9 @@
+@use '../tokens' as *;
+
+// ============================================================================
+// Settings Page — Rushbox Configurator
+// ============================================================================
+
 [data-bs-theme="dark"] {
 	optgroup {
 		background-color: var(--bs-secondary-bg);
@@ -11,6 +17,36 @@
 			font-style: italic;
 			background-color: var(--bs-tertiary-bg);
 			color: var(--bs-tertiary-color);
+		}
+	}
+}
+
+// ── Save / Submit buttons — accent gradient with soft 3D ─────────
+.settings-page {
+	.btn[type="submit"],
+	.btn-primary {
+		border-radius: 999px;
+		padding: 0.65rem 2rem;
+		font-weight: 600;
+		font-size: 1rem;
+		background: $mm-accent-grad;
+		border: none;
+		color: #fff;
+		box-shadow:
+			0 1px 2px rgba(0, 0, 0, 0.3),
+			0 4px 8px rgba(0, 0, 0, 0.15),
+			inset 0 1px 0 rgba(255, 255, 255, 0.15);
+		transition: all 0.15s ease;
+
+		&:hover {
+			background: $mm-accent-grad-hover;
+			color: #fff;
+		}
+
+		&:active {
+			box-shadow:
+				0 1px 2px rgba(0, 0, 0, 0.2),
+				inset 0 1px 3px rgba(0, 0, 0, 0.2);
 		}
 	}
 }

@@ -1,46 +1,193 @@
-$gp-primary: #ec008c;
+// ============================================================================
+// moimate Dark Theme — GP2040-CE WebConfigurator
+// ============================================================================
 
-// Override default variables before the import
-$primary: #495057;
-$danger: #7b2d26;
+@use './tokens' as *;
 
-$body-color-dark: #e3e3e3;
-$body-bg-dark: #1b1b1d;
+// -- Bootstrap overrides (before import) --
+$body-bg:    $mm-bg-primary;
+$body-color: $mm-text-primary;
 
-$navbar-light-hover-color: $gp-primary;
-$navbar-light-active-color: $gp-primary;
+$primary:   $mm-accent;
+$success:   $mm-success;
+$warning:   $mm-warning;
+$danger:    $mm-danger;
+$info:      $mm-accent;
+$secondary: $mm-bg-tertiary;
+
+$body-bg-dark:    $mm-bg-primary;
+$body-color-dark: $mm-text-primary;
+
+$border-color:      $mm-border;
+$border-color-dark: $mm-border;
+
+$card-bg:           $mm-bg-secondary;
+$card-border-color: $mm-border;
+$card-cap-bg:       $mm-bg-tertiary;
+
+$input-bg:           $mm-bg-secondary;
+$input-color:        $mm-text-primary;
+$input-border-color: $mm-border;
+$input-focus-border-color: $mm-accent;
+$input-focus-box-shadow:   0 0 0 0.2rem rgba($mm-accent, 0.25);
+
+$form-select-bg:           $mm-bg-secondary;
+$form-select-color:        $mm-text-primary;
+$form-select-border-color: $mm-border;
+
+$modal-content-bg:            $mm-bg-secondary;
+$modal-content-border-color:  $mm-border;
+$modal-header-border-color:   $mm-border;
+$modal-footer-border-color:   $mm-border;
+
+$nav-link-color:       $mm-text-secondary;
+$nav-link-hover-color: $mm-accent;
+
+$nav-pills-link-active-bg:    $mm-accent;
+$nav-pills-link-active-color: $mm-bg-primary;
+
+$nav-tabs-border-color:             $mm-border;
+$nav-tabs-link-active-bg:           $mm-bg-primary;
+$nav-tabs-link-active-color:        $mm-accent;
+$nav-tabs-link-active-border-color: $mm-border $mm-border $mm-bg-primary;
+
+$popover-bg:           $mm-bg-elevated;
+$popover-border-color: $mm-border;
+$popover-header-bg:    $mm-bg-tertiary;
+$popover-body-color:   $mm-text-primary;
+
+$tooltip-bg:    $mm-bg-tertiary;
+$tooltip-color: $mm-text-primary;
+
+$alert-bg-scale:     -80%;
+$alert-border-scale: -70%;
+$alert-color-scale:  40%;
+
+$btn-close-color: $mm-text-secondary;
 
 $enable-cssgrid: true;
 
 @import "~bootstrap/scss/bootstrap";
 
+// ============================================================================
+// CSS Custom Properties (runtime access)
+// ============================================================================
+:root {
+	--mm-bg-primary:    #{$mm-bg-primary};
+	--mm-bg-secondary:  #{$mm-bg-secondary};
+	--mm-bg-tertiary:   #{$mm-bg-tertiary};
+	--mm-bg-elevated:   #{$mm-bg-elevated};
+
+	--mm-text-primary:   #{$mm-text-primary};
+	--mm-text-secondary: #{$mm-text-secondary};
+	--mm-text-tertiary:  #{$mm-text-tertiary};
+
+	--mm-accent:  #{$mm-accent};
+	--mm-success: #{$mm-success};
+	--mm-warning: #{$mm-warning};
+	--mm-danger:  #{$mm-danger};
+
+	--mm-border: #{$mm-border};
+
+	--mm-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--mm-font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+	--mm-topnav-height: 56px;
+	--mm-topnav-bg: #{$mm-topnav-bg};
+
+	// Override Bootstrap dark mode defaults
+	--bs-body-bg: #{$mm-bg-primary};
+	--bs-body-color: #{$mm-text-primary};
+	--bs-border-color: #{$mm-border};
+	--bs-tertiary-bg: #{$mm-bg-tertiary};
+	--bs-secondary-bg: #{$mm-bg-secondary};
+}
+
+// ============================================================================
+// Base reset & typography
+// ============================================================================
 * {
-	font-size: 16px;
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 15.5px;
 }
 
 body {
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-		sans-serif;
+	font-family: var(--mm-font-body);
+	background-color: var(--mm-bg-primary);
+	color: var(--mm-text-primary);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-h1 {
-	font-size: 1.5rem;
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 600;
+	color: var(--mm-text-primary);
 }
 
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-		monospace;
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.333rem; }
+h3 { font-size: 1.2rem; }
+
+code, .font-mono {
+	font-family: var(--mm-font-mono);
 }
 
+// Monospace for numeric data
+.mono {
+	font-family: var(--mm-font-mono);
+	font-variant-numeric: tabular-nums;
+}
+
+// ============================================================================
+// Form elements
+// ============================================================================
 input.form-control {
-	:focus {
+	&:focus {
 		color: inherit;
+		background-color: var(--mm-bg-secondary);
+		border-color: var(--mm-accent);
 	}
 }
 
+.form-control,
+.form-select {
+	background-color: var(--mm-bg-secondary);
+	color: var(--mm-text-primary);
+	border-color: var(--mm-border);
+
+	&:focus {
+		background-color: var(--mm-bg-secondary);
+		color: var(--mm-text-primary);
+		border-color: var(--mm-accent);
+		box-shadow: 0 0 0 0.2rem rgba($mm-accent, 0.2);
+	}
+
+	&::placeholder {
+		color: var(--mm-text-tertiary);
+	}
+}
+
+.form-check-input {
+	background-color: var(--mm-bg-tertiary);
+	border-color: var(--mm-border);
+
+	&:checked {
+		background-color: var(--mm-accent);
+		border-color: var(--mm-accent);
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 0.2rem rgba($mm-accent, 0.25);
+	}
+}
+
+// ============================================================================
+// Buttons
+// ============================================================================
 button {
 	display: flex;
 	flex-direction: row;
@@ -52,27 +199,119 @@ button {
 	}
 }
 
-// Fix for invalid inputs showing valid style after calling `form.checkValidity()`
-.was-validated .form-control.is-invalid {
-	border-color: $danger;
-	padding-right: calc(1.5em + 0.75rem);
-	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-	background-repeat: no-repeat;
-	background-position: right calc(0.375em + 0.1875rem) center;
-	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+.btn-primary {
+	background-color: var(--mm-accent);
+	border-color: var(--mm-accent);
+	color: #1a1a1a;
+
+	&:hover, &:focus {
+		background-color: lighten($mm-accent, 8%);
+		border-color: lighten($mm-accent, 8%);
+		color: #1a1a1a;
+	}
+
+	&:active {
+		background-color: darken($mm-accent, 5%);
+		border-color: darken($mm-accent, 5%);
+	}
 }
 
+.btn-outline-primary {
+	color: var(--mm-accent);
+	border-color: var(--mm-accent);
+
+	&:hover {
+		background-color: var(--mm-accent);
+		color: #1a1a1a;
+	}
+}
+
+.btn-success {
+	background-color: var(--mm-success);
+	border-color: var(--mm-success);
+	color: #1a1a1a;
+
+	&:hover, &:focus {
+		background-color: lighten($mm-success, 5%);
+		border-color: lighten($mm-success, 5%);
+		color: #1a1a1a;
+	}
+}
+
+.btn-danger {
+	background-color: var(--mm-danger);
+	border-color: var(--mm-danger);
+	color: #fff;
+
+	&:hover, &:focus {
+		background-color: lighten($mm-danger, 5%);
+		border-color: lighten($mm-danger, 5%);
+	}
+}
+
+.btn-secondary {
+	background-color: var(--mm-bg-tertiary);
+	border-color: var(--mm-border);
+	color: var(--mm-text-secondary);
+
+	&:hover {
+		background-color: var(--mm-bg-elevated);
+		color: var(--mm-text-primary);
+	}
+}
+
+// ============================================================================
+// Cards
+// ============================================================================
 .card {
-	border-color: $primary;
+	border-color: var(--mm-border);
+	background-color: var(--mm-bg-secondary);
 }
 
 .card-header {
-	background-color: $primary;
-	color: $white;
+	background-color: var(--mm-bg-tertiary);
+	color: var(--mm-text-primary);
+	border-bottom-color: var(--mm-border);
 }
 
+// ============================================================================
+// Alerts
+// ============================================================================
+.alert-warning {
+	background-color: rgba($mm-warning, 0.12);
+	border-color: rgba($mm-warning, 0.3);
+	color: $mm-warning;
+
+	a {
+		color: lighten($mm-warning, 10%);
+	}
+}
+
+.alert-info {
+	background-color: rgba($mm-accent, 0.12);
+	border-color: rgba($mm-accent, 0.3);
+	color: $mm-accent;
+}
+
+.alert-danger {
+	background-color: rgba($mm-danger, 0.12);
+	border-color: rgba($mm-danger, 0.3);
+	color: lighten($mm-danger, 15%);
+}
+
+.alert-success {
+	background-color: rgba($mm-success, 0.12);
+	border-color: rgba($mm-success, 0.3);
+	color: $mm-success;
+}
+
+// ============================================================================
+// Popover
+// ============================================================================
 .popover {
-	z-index: 2;
+	z-index: 1060;
+	background-color: var(--mm-bg-elevated);
+	border-color: var(--mm-border);
 
 	.cover {
 		position: fixed;
@@ -83,6 +322,63 @@ button {
 	}
 }
 
+// ============================================================================
+// Modal
+// ============================================================================
+.modal-backdrop {
+	background-color: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(4px);
+}
+
+.modal-content {
+	background-color: var(--mm-bg-secondary);
+	border: 1px solid var(--mm-border);
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.modal-header {
+	border-bottom-color: var(--mm-border);
+	padding: 1.25rem 1.5rem;
+
+	.modal-title {
+		font-size: 1.1rem;
+		font-weight: 600;
+	}
+
+	.btn-close {
+		filter: invert(1) grayscale(100%) brightness(0.8);
+		opacity: 0.5;
+		transition: opacity 0.15s ease;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+.modal-body {
+	padding: 1.25rem 1.5rem;
+	color: var(--mm-text-secondary);
+}
+
+.modal-footer {
+	border-top-color: var(--mm-border);
+	padding: 1rem 1.5rem;
+	gap: 0.5rem;
+
+	.btn {
+		border-radius: 999px;
+		padding: 0.55rem 1.25rem;
+		font-size: 0.933rem;
+		font-weight: 500;
+		border: none;
+	}
+}
+
+// ============================================================================
+// Misc
+// ============================================================================
 .button-group {
 	display: flex;
 	justify-content: flex-start;
@@ -90,4 +386,131 @@ button {
 	button:not(:first-child) {
 		margin-left: 10px;
 	}
+}
+
+.was-validated .form-control.is-invalid {
+	border-color: var(--mm-danger);
+	padding-right: calc(1.5em + 0.75rem);
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23E85D5D'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23E85D5D' stroke='none'/%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+// ============================================================================
+// Scrollbar styling
+// ============================================================================
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--mm-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--mm-bg-tertiary);
+	border-radius: 3px;
+
+	&:hover {
+		background: var(--mm-text-tertiary);
+	}
+}
+
+// ============================================================================
+// Spinner
+// ============================================================================
+.spinner-border {
+	color: var(--mm-accent);
+}
+
+// ============================================================================
+// Tab overrides
+// ============================================================================
+.nav-pills .nav-item + .nav-item {
+	margin-top: 1rem;
+}
+
+.nav-pills .nav-link {
+	color: var(--mm-text-tertiary);
+	border-radius: 0;
+	padding: 0.6rem 1.25rem;
+	font-size: 0.933rem;
+	font-weight: 500;
+	border-bottom: 2px solid transparent;
+	background: none;
+	transition: all 0.15s ease;
+
+	&:hover {
+		color: var(--mm-text-primary);
+		background: none;
+	}
+
+	&.active {
+		color: var(--mm-accent);
+		border-bottom-color: var(--mm-accent);
+		background: none;
+		font-weight: 500;
+	}
+}
+
+.nav-tabs {
+	border-bottom: 1px solid var(--mm-border);
+	gap: 0;
+
+	.nav-link {
+		border: none;
+		border-bottom: 2px solid transparent;
+		border-radius: 0;
+		margin-bottom: -1px;
+		padding: 0.75rem 1.5rem;
+		color: var(--mm-text-tertiary);
+		font-size: 0.933rem;
+		font-weight: 500;
+		transition: all 0.15s ease;
+
+		&:hover {
+			color: var(--mm-text-primary);
+			border-color: transparent;
+			background: none;
+		}
+
+		&.active {
+			color: var(--mm-accent);
+			border-bottom-color: var(--mm-accent);
+			background: none;
+		}
+	}
+}
+
+// ============================================================================
+// Form refinements
+// ============================================================================
+.form-control,
+.form-select {
+	border-radius: 8px;
+}
+
+.form-label {
+	font-size: 0.867rem;
+	font-weight: 500;
+	color: var(--mm-text-secondary);
+	margin-bottom: 0.35rem;
+}
+
+.form-text {
+	color: var(--mm-text-tertiary);
+	font-size: 0.8rem;
+}
+
+// ============================================================================
+// Progress bar
+// ============================================================================
+.progress {
+	background-color: var(--mm-bg-tertiary);
+}
+
+.progress-bar {
+	background-color: var(--mm-accent);
 }
